@@ -1,7 +1,14 @@
 import 'package:beespoke_assigment/controllers/products_controller.dart';
+import 'package:beespoke_assigment/screen/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-class ProductFeed extends StatelessWidget {
+
+class ProductFeed extends StatefulWidget {
+  @override
+  _ProductFeedState createState() => _ProductFeedState();
+}
+
+class _ProductFeedState extends  State<ProductFeed> {
   final ProductsController productsController = Get.put(ProductsController());
   final List categories = [
     "TShirt",
@@ -185,8 +192,7 @@ class ProductFeed extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Cloths"
-                  ,
+                  "Cloths",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -219,7 +225,9 @@ class ProductFeed extends StatelessWidget {
           margin: EdgeInsets.only(right: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4.0),
-            color: index == 0 ? Color.fromARGB(221, 124, 7, 142) : Colors.transparent,
+            color: index == 0
+                ? Color.fromARGB(221, 124, 7, 142)
+                : Colors.transparent,
           ),
           padding: EdgeInsets.symmetric(
             horizontal: 16.0,
@@ -243,33 +251,25 @@ class ProductFeed extends StatelessWidget {
       iconTheme: IconThemeData(color: Colors.black),
       leading: BackButton(),
       elevation: 0,
-     
-                
-
-                  
-              
-              
       title: Container(
-        height: 30 ,
-        
+        height: 30,
         decoration: BoxDecoration(
-
-                    image: DecorationImage(
-                      
-                      
-                    image: AssetImage("assets/images/LOGO.png"),
-                    
-                    fit: BoxFit.fitHeight,
-                
-                  )
-                
-                ),
+            image: DecorationImage(
+          image: AssetImage("assets/images/LOGO.png"),
+          fit: BoxFit.fitHeight,
+        )),
       ),
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.search)),
         IconButton(
             onPressed: () {}, icon: Icon(Icons.notifications_none_outlined)),
-        IconButton(onPressed: () {}, icon: Icon(Icons.shopping_cart_outlined)),
+        IconButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CartPage(),
+              ));
+            },
+            icon: Icon(Icons.shopping_cart_outlined)),
       ],
     );
   }

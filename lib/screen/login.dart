@@ -5,7 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController pswController = TextEditingController();
+  final url = "https://fakestoreapi.com/auth/login";
+  userLogin(emailController, pswController, BuildContext context) async {
+    final response = await http.post(Uri.parse(url), body: {
+      emailController = emailController,
+      pswController = pswController
+    }).whenComplete(() {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ProductFeed()));
+    });
+    print(response.body);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,9 +75,11 @@ class LoginPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Column(
                     children: <Widget>[
-                      inputFile(label: "Email"),
-            
-                      inputFile(label: "Password", obscureText: true)
+                      inputFile(label: "Email", controller: emailController),
+                      inputFile(
+                          label: "Password",
+                          obscureText: true,
+                          controller: pswController)
                     ],
                   ),
                 ),
@@ -78,21 +99,29 @@ class LoginPage extends StatelessWidget {
                       minWidth: double.infinity,
                       height: 60,
                       onPressed: () {
+                        if (emailController.text.isNotEmpty &&
+                            pswController.text.isNotEmpty) {
+                          userLogin(emailController.text.toString(),
+                              pswController.text.toString(), context);
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Message"),
+                                  content: Text("feild must not be empty"),
+                                );
+                              });
+                        }
+                        // var email = emailController.text;
+                        // var psw = pswController.text;
+                        // Map<String, String>? request;
+                        // request!.addAll({'username': email, 'password': psw});
 
-                        // if (email.text.isNotEmpty && password.text.isNotEmpty) {
-                        //   userLogin(email.text.toString(),
-                        //       password.text.toString(), context);
-                        // } else {
-                        //   showDialog(
-                        //       context: context,
-                        //       builder: (context) {
-                        //         return AlertDialog(
-                        //           title: Text("Message"),
-                        //           content: Text("feild must not be empty"),
-                        //         );
-                        //       });
-                        // }
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> ProductFeed()));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => ProductFeed()));
                       },
                       color: Color(0x80E100FF),
                       elevation: 1,
@@ -154,7 +183,7 @@ class LoginPage extends StatelessWidget {
 // }
 
 // we will be creating a widget for text field
-Widget inputFile({label, obscureText = false}) {
+Widget inputFile({label, obscureText = false, controller}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -167,8 +196,7 @@ Widget inputFile({label, obscureText = false}) {
         height: 5,
       ),
       TextField(
-       
-        
+        controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
